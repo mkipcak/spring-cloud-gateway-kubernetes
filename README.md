@@ -20,3 +20,12 @@ kubectl delete -f test-service/test-service-deployment.yaml
 kubectl create -f test-service/test-service-deployment.yaml
 minikube service gateway-service
 ```
+
+# Consumable endpoints
+
+```
+/
+/test
+/services
+/services/{serviceId}
+```
