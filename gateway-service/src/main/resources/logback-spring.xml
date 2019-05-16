@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+
+<configuration scan="true">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    
+    
+    <property name="app.name" value="composer-api-gateway" />
+    <property name="pattern.default" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [ %-60.60(%.20t | %C{0}.%method) ] %-5p : %m%n%rEx{2}" />
+    <property name="pattern.sql" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [ %-20.20t ] : %m%n%rEx{2}" />
+  	<property name="rollingMaxHistory" value="7" />
+  	
+  	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender"> 
+		<encoder> 
+    		<Pattern>${pattern.${app.name}.console:-${pattern.default}}</Pattern>
+    		<charset>UTF-8</charset>
+  		</encoder> 
+	</appender> 
+
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/${app.name}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>logs/archive/%d{yyyy,aux}/%d{yyyy-MM,aux}/%d{yyyy-MM-dd,aux}/${app.name}.%d{yyyy-MM-dd}.log.zip</FileNamePattern>
+			<MaxHistory>${rollingMaxHistory}</MaxHistory>
+		</rollingPolicy>
+  		<encoder>
+    		<Pattern>${pattern.${app.name}:-${pattern.default}}</Pattern>
+			<charset>UTF-8</charset>
+  		</encoder>
+	</appender>
+	<appender name="FILE_SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/${app.name}.sql.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>logs/archive/%d{yyyy,aux}/%d{yyyy-MM,aux}/%d{yyyy-MM-dd,aux}/${app.name}.sql.%d{yyyy-MM-dd}.log.zip</FileNamePattern>
+			<MaxHistory>${rollingMaxHistory}</MaxHistory>
+		</rollingPolicy>
+  		<encoder>
+    		<Pattern>${pattern.${app.name}.sql:-${pattern.sql}}</Pattern>
+			<charset>UTF-8</charset>
+  		</encoder>
+	</appender>
+
+    <logger name="javax.activation" level="WARN"/>
+    <logger name="javax.mail" level="WARN"/>
+    <logger name="javax.management.remote" level="WARN"/>
+    <logger name="javax.xml.bind" level="WARN"/>
+    <logger name="ch.qos.logback" level="WARN"/>
+    <logger name="com.codahale.metrics" level="WARN"/>
+    <logger name="com.ryantenney" level="WARN"/>
+    <logger name="com.sun" level="WARN"/>
+    <logger name="com.zaxxer" level="WARN"/>
+    <logger name="io.undertow" level="WARN"/>
+    <logger name="io.undertow.websockets.jsr" level="ERROR"/>
+    <logger name="org.ehcache" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="org.apache.catalina.startup.DigesterFactory" level="OFF"/>
+    <logger name="org.bson" level="WARN"/>
+    <logger name="org.hibernate.validator" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
+    <logger name="org.hibernate.cache" level="WARN" />
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.springframework.cache" level="WARN"/>
+    <logger name="org.thymeleaf" level="WARN"/>
+    <logger name="org.xnio" level="WARN"/>
+    <logger name="springfox" level="WARN"/>
+    <logger name="sun.rmi" level="WARN"/>
+    <logger name="liquibase" level="WARN"/>
+    <logger name="LiquibaseSchemaResolver" level="INFO"/>
+    <logger name="sun.rmi.transport" level="WARN"/>
+    <logger name="edu.stanford.nlp.pipeline.StanfordCoreNLP" level="OFF"/>
+    
+    
+    <logger name="com.novomind" level="INFO" />
+    
+    <logger name="org.hibernate.SQL" level="INFO" additivity="false">
+    	<appender-ref ref="FILE_SQL" />
+    </logger>
+
+    <logger name="org.hibernate.type" level="INFO" additivity="false">
+        <appender-ref ref="FILE_SQL" />
+    </logger>
+    
+    <root level="INFO">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="FILE" />
+	</root>
+    
+
+    <!-- https://logback.qos.ch/manual/configuration.html#shutdownHook and https://jira.qos.ch/browse/LOGBACK-1090 -->
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+</configuration>
